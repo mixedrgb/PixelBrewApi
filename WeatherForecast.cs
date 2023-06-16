@@ -1,3 +1,5 @@
+using System;
+
 namespace PixelBrewApi;
 
 public class WeatherForecast
