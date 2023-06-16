@@ -9,11 +9,11 @@ public class SqlConnectionString
 {
     public string GetConnectionString()
     {
-        string envVar = File.ReadAllText("./sql-environment");
-        envVar = envVar.Split("=")[1].Trim();
-        string? serverName = Environment.GetEnvironmentVariable(envVar);
-        string databaseName = "SQLEXPRESS";
-        string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
+        string serverName = File.ReadAllText(@".\.sql-environment");
+        serverName = serverName.Split("=")[1].Trim();
+        serverName += @"\SQLEXPRESS";
+        string databaseName = "PixelBrew";
+        string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;TrustServerCertificate=True;";
         return connectionString;
     }
 }
