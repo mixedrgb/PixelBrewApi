@@ -14,3 +14,6 @@
 # binary/objects
 obj/
 bin/
+
+# other
+.sql-environment
