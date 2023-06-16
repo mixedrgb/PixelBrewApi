@@ -22,7 +22,7 @@ public class Program
             options.AddPolicy(
                 "CorsPolicy",
                 builder => builder
-                    .WithOrigins("http://localhost:5271")
+                    .WithOrigins("http://localhost:5555")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
