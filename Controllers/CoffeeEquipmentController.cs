@@ -8,9 +8,10 @@ using Microsoft.Data.SqlClient;
 
 
 namespace PixelBrewApi;
+[ApiController]
+[Route("[controller]")]
 public class CoffeeEquipmentController
 {
-
     [HttpGet]
     [Route("/GetEquipment")]
     public string GetEquipment(string equipment)
