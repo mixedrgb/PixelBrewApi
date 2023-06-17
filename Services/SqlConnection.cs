@@ -10,7 +10,7 @@ public class SqlConnectionString
     public string GetConnectionString()
     {
         // read the value of COMPUTERNAME from the environment
-        string serverName = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        string serverName = Environment.GetEnvironmentVariable("COMPUTERNAME") ?? "";
         //string serverName = File.ReadAllText(@".\.sql-environment");
         //serverName = serverName.Split("=")[1].Trim();
         serverName += @"\SQLEXPRESS";
