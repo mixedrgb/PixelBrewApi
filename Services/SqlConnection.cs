@@ -9,8 +9,10 @@ public class SqlConnectionString
 {
     public string GetConnectionString()
     {
-        string serverName = File.ReadAllText(@".\.sql-environment");
-        serverName = serverName.Split("=")[1].Trim();
+        // read the value of COMPUTERNAME from the environment
+        string serverName = Environment.GetEnvironmentVariable("COMPUTERNAME");
+        //string serverName = File.ReadAllText(@".\.sql-environment");
+        //serverName = serverName.Split("=")[1].Trim();
         serverName += @"\SQLEXPRESS";
         string databaseName = "PixelBrew";
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;TrustServerCertificate=True;";
