@@ -18,8 +18,9 @@ public class CoffeeEquipmentController
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
-        var sql = $"select {equipment} from Coffee;";
+        var sql = $"select * from Coffee;";
         string v = "";
+        Coffee cofe = new Coffee();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
@@ -28,7 +29,8 @@ public class CoffeeEquipmentController
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             while (sqlDataReader.Read())
             {
-                v += sqlDataReader[equipment].ToString();
+                //cofe.CoffeeId = Convert.ToInt32(sqlDataReader["CoffeeId"]);
+                v += sqlDataReader["Varietal"].ToString();
             }
         }
 
