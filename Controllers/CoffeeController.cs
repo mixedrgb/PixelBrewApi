@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -11,15 +12,15 @@ public class CoffeeController
 {
 
     #region Insert Coffee
-    [HttpGet]
+    [HttpPost]
     [Route("/InsertCoffee")]
     public int InsertCoffee(string coffeeName,
-    string region = "",
-    string processing = "",
-    string varietal = "",
-    string roastType = "",
-    string weight = "",
-    string roastDate = "")
+    string? region = "re'io",
+    string? processing = "procs",
+    string? varietal = "vari",
+    string? roastType = "roast",
+    string? weight = "fat",
+    string? roastDate = "old")
     {
 
         //CoffeeId, CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate
@@ -27,10 +28,15 @@ public class CoffeeController
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
-        var sql = @$"insert into Coffee
+        var sql = @$"INSERT INTO Coffee
 (CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate)
-values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{weight}','{roastDate}')
+VALUES
+(@CoffeeName, @Region, @Processing, @Varietal, @RoastType, @Weight, @RoastDate)
 ;";
+        //         var sql = @$"insert into Coffee
+        // (CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate)
+        // values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{weight}','{roastDate}')
+        // ;";
 
         Coffee cofe = new Coffee();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
@@ -39,7 +45,7 @@ values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{we
             SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramCoffeeName = new SqlParameter("@CoffeeName", coffeeName); // == null ? (object)DBNull.Value : employee.FirstName);
+            SqlParameter paramCoffeeName = new SqlParameter("CoffeeName", coffeeName); // == null ? (object)DBNull.Value : employee.FirstName);
             SqlParameter paramRegion = new SqlParameter("@Region", region); // == null ? (object)DBNull.Value : employee.Salary);
             SqlParameter paramProcessing = new SqlParameter("@Processing", processing); // == null ? (object)DBNull.Value : employee.Salary);
             SqlParameter paramVarietal = new SqlParameter("@Varietal", varietal); // == null ? (object)DBNull.Value : employee.Salary);
@@ -75,7 +81,7 @@ values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{we
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
-        var sql = $"select * from Coffee;";
+        var sql = "SELECT * FROM Coffee;";
         Coffee cofe = new Coffee();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
@@ -101,7 +107,7 @@ values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{we
     #endregion
 
     #region Update Coffee
-    [HttpGet]
+    [HttpPatch]
     [Route("/UpdateCoffee")]
     public int UpdateCoffee(int coffeeId,
     string coffeeName,
@@ -112,27 +118,34 @@ values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{we
     string weight = "",
     string roastDate = "")
     {
-        //CoffeeId, CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate
-
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
-        var sql = @$"update Coffee set
-CoffeeName = @CoffeeName,
-Region = @Region,
-Processing = @Processing,
-Varietal = @Varietal,
-RoastType = @RoastType,
-Weight = @Weight,
-RoastDate = @RoastDate
-where CoffeeId = @CoffeeId
-;";
-
         Coffee cofe = new Coffee();
+        cofe.CoffeeName = coffeeName;
+        cofe.Region = region;
+        cofe.Processing = processing;
+        cofe.Varietal = varietal;
+        cofe.RoastType = roastType;
+        cofe.Weight = weight;
+        cofe.RoastDate = roastDate;
+
+        string sql = CoffeeQuery.BuildQuery(cofe);
+        //CoffeeName = @CoffeeName,
+        //Region = @Region,
+        //Processing = @Processing,
+        //Varietal = @Varietal,
+        //RoastType = @RoastType,
+        //Weight = @Weight,
+        //RoastDate = @RoastDate
+        //
+        //WHERE CoffeeId = @CoffeeId
+        //;");
+
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(sql.ToString(), sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
             SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
