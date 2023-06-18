@@ -23,8 +23,6 @@ public class CoffeeController
     string? roastDate = "old")
     {
 
-        //CoffeeId, CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate
-
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
@@ -33,11 +31,6 @@ public class CoffeeController
 VALUES
 (@CoffeeName, @Region, @Processing, @Varietal, @RoastType, @Weight, @RoastDate)
 ;";
-        //         var sql = @$"insert into Coffee
-        // (CoffeeName, Region, Processing, Varietal, RoastType, Weight, RoastDate)
-        // values ('{coffeeName}','{region}','{processing}','{varietal}','{roastType}','{weight}','{roastDate}')
-        // ;";
-
         Coffee cofe = new Coffee();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
@@ -45,13 +38,26 @@ VALUES
             SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramCoffeeName = new SqlParameter("CoffeeName", coffeeName); // == null ? (object)DBNull.Value : employee.FirstName);
-            SqlParameter paramRegion = new SqlParameter("@Region", region); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramProcessing = new SqlParameter("@Processing", processing); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramVarietal = new SqlParameter("@Varietal", varietal); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramRoastType = new SqlParameter("@RoastType", roastType); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramWeight = new SqlParameter("@Weight", weight); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramRoastDate = new SqlParameter("@RoastDate", roastDate); // == null ? (object)DBNull.Value : employee.Salary);
+            SqlParameter paramCoffeeName = new SqlParameter("CoffeeName",
+                    coffeeName == null ? (object)DBNull.Value : coffeeName);
+
+            SqlParameter paramRegion = new SqlParameter("@Region",
+                    region == null ? (object)DBNull.Value : region);
+
+            SqlParameter paramProcessing = new SqlParameter("@Processing",
+                    processing == null ? (object)DBNull.Value : processing);
+
+            SqlParameter paramVarietal = new SqlParameter("@Varietal",
+                    varietal == null ? (object)DBNull.Value : varietal);
+
+            SqlParameter paramRoastType = new SqlParameter("@RoastType",
+                    roastType == null ? (object)DBNull.Value : roastType);
+
+            SqlParameter paramWeight = new SqlParameter("@Weight",
+                    weight == null ? (object)DBNull.Value : weight);
+
+            SqlParameter paramRoastDate = new SqlParameter("@RoastDate",
+                    roastDate == null ? (object)DBNull.Value : roastDate);
 
             paramCoffeeName.DbType = DbType.String;
             paramRegion.DbType = DbType.String;
@@ -131,16 +137,6 @@ VALUES
         cofe.RoastDate = roastDate;
 
         string sql = CoffeeQuery.BuildQuery(cofe);
-        //CoffeeName = @CoffeeName,
-        //Region = @Region,
-        //Processing = @Processing,
-        //Varietal = @Varietal,
-        //RoastType = @RoastType,
-        //Weight = @Weight,
-        //RoastDate = @RoastDate
-        //
-        //WHERE CoffeeId = @CoffeeId
-        //;");
 
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
@@ -174,6 +170,35 @@ VALUES
             sqlCommand.Parameters.Add(paramRoastType);
             sqlCommand.Parameters.Add(paramWeight);
             sqlCommand.Parameters.Add(paramRoastDate);
+
+            return sqlCommand.ExecuteNonQuery();
+        }
+    }
+    #endregion
+
+    #region Delete Coffee
+    [HttpDelete]
+    [Route("/DeleteCoffee")]
+    public int DeleteCoffee(int coffeeId)
+    {
+        var sqlConn = new SqlConnectionString();
+        string connectionString = sqlConn.GetConnectionString();
+
+        var sql = @$"DELETE FROM Coffee WHERE CoffeeId = @CoffeeId;";
+
+        Coffee cofe = new Coffee();
+
+        using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        {
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+
+            SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
+
+            paramCoffeeId.DbType = DbType.Int32;
+
+            sqlCommand.Parameters.Add(paramCoffeeId);
 
             return sqlCommand.ExecuteNonQuery();
         }
