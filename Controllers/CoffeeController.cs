@@ -15,13 +15,13 @@ public class CoffeeController
     #region Insert Coffee
     [HttpPost]
     [Route("/InsertCoffee")]
-    public int InsertCoffee(string coffeeName,
-    string? region = "re'io",
-    string? processing = "procs",
-    string? varietal = "vari",
-    string? roastType = "roast",
-    string? weight = "fat",
-    string? roastDate = "old")
+    public Response InsertCoffee(string coffeeName = "Barista's Choice",
+    string? region = "Vietnam",
+    string? processing = "Natural",
+    string? varietal = "Orange Bourbon",
+    string? roastType = "Medium-light",
+    string? weight = "340g",
+    string? roastDate = "1970/01/01")
     {
 
         var sqlConn = new SqlConnectionString();
