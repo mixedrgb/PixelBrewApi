@@ -3,6 +3,7 @@ using System.Data;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace PixelBrewApi;
 
@@ -31,7 +32,6 @@ public class CoffeeController
 VALUES
 (@CoffeeName, @Region, @Processing, @Varietal, @RoastType, @Weight, @RoastDate)
 ;";
-        Coffee cofe = new Coffee();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
@@ -75,7 +75,16 @@ VALUES
             sqlCommand.Parameters.Add(paramWeight);
             sqlCommand.Parameters.Add(paramRoastDate);
 
-            return sqlCommand.ExecuteNonQuery();
+            // return a 200 OK status method
+            sqlCommand.ExecuteNonQuery();
+
+            Response response = new Response();
+            response.Message = "Coffee inserted successfully";
+            response.Status = "Success";
+            Coffee cofe = new Coffee();
+            response.Coffees = GetCoffee();
+
+            return response;
         }
     }
     #endregion
@@ -83,12 +92,12 @@ VALUES
     #region Get Coffee
     [HttpGet]
     [Route("/GetCoffee")]
-    public Coffee GetCoffee(string fixMe = "aaaaaaaaaaaaaaa")
+    public List<Coffee> GetCoffee()
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
         var sql = "SELECT * FROM Coffee;";
-        Coffee cofe = new Coffee();
+        List<Coffee> listOfCoffee = new List<Coffee>();
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
             sqlConnection.Open();
@@ -97,6 +106,7 @@ VALUES
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             while (sqlDataReader.Read())
             {
+                Coffee cofe = new Coffee();
                 cofe.CoffeeName = sqlDataReader["CoffeeName"].ToString() ?? "";
                 cofe.CoffeeId = Convert.ToInt32(sqlDataReader["CoffeeId"]);
                 cofe.Region = sqlDataReader["Region"].ToString();
@@ -105,10 +115,11 @@ VALUES
                 cofe.RoastType = sqlDataReader["RoastType"].ToString();
                 cofe.Weight = sqlDataReader["Weight"].ToString();
                 cofe.RoastDate = sqlDataReader["RoastDate"].ToString();
+                listOfCoffee.Add(cofe);
             }
         }
 
-        return cofe;
+        return listOfCoffee;
     }
     #endregion
 
