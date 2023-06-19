@@ -190,29 +190,51 @@ VALUES
     #region Delete Coffee
     [HttpDelete]
     [Route("/DeleteCoffee")]
-    public int DeleteCoffee(int coffeeId)
+    public Response DeleteCoffee(int coffeeId)
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
         var sql = @$"DELETE FROM Coffee WHERE CoffeeId = @CoffeeId;";
-
         Coffee cofe = new Coffee();
-
-        using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        var response = new Response();
+        try
         {
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
 
-            paramCoffeeId.DbType = DbType.Int32;
+                SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
 
-            sqlCommand.Parameters.Add(paramCoffeeId);
+                paramCoffeeId.DbType = DbType.Int32;
 
-            return sqlCommand.ExecuteNonQuery();
+                sqlCommand.Parameters.Add(paramCoffeeId);
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                if (rowsAffected == 1)
+                {
+                    response.Message = $"Coffee with id {coffeeId} deleted successfully";
+                }
+                else
+                {
+                    response.Message = $"Coffee with id {coffeeId} not found";
+                    response.Status = "Failure";
+                }
+            }
+
+            response.Coffees = GetCoffee();
+
         }
+        catch (Exception e)
+        {
+            response.Message = e.Message;
+            response.Status = "Failure";
+        }
+
+        return response;
     }
     #endregion
 }
