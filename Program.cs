@@ -26,7 +26,9 @@ public class Program
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
+            //            .AllowAnyOrigin()
             );
+
         });
         //jack - end
         var app = builder.Build();

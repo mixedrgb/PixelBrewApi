@@ -15,7 +15,7 @@ public class CoffeeController
     #region Insert Coffee
     [HttpPost]
     [Route("/InsertCoffee")]
-    public Response InsertCoffee(string coffeeName = "Barista's Choice",
+    public CoffeeResponse InsertCoffee(string coffeeName = "Barista's Choice",
     string? region = "Vietnam",
     string? processing = "Natural",
     string? varietal = "Orange Bourbon",
@@ -78,7 +78,7 @@ VALUES
             // return a 200 OK status method
             sqlCommand.ExecuteNonQuery();
 
-            Response response = new Response();
+            CoffeeResponse response = new CoffeeResponse();
             response.Message = "Coffee inserted successfully";
             response.Status = "Success";
             Coffee cofe = new Coffee();
@@ -190,14 +190,14 @@ VALUES
     #region Delete Coffee
     [HttpDelete]
     [Route("/DeleteCoffee")]
-    public Response DeleteCoffee(int coffeeId)
+    public CoffeeResponse DeleteCoffee(int coffeeId)
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
         var sql = @$"DELETE FROM Coffee WHERE CoffeeId = @CoffeeId;";
         Coffee cofe = new Coffee();
-        var response = new Response();
+        var response = new CoffeeResponse();
         try
         {
 
