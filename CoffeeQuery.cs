@@ -20,7 +20,7 @@ public static class CoffeeQuery
 
         if (cofe.Processing != null && cofe.Processing.Length > 0)
         {
-            sql.Append(", Processing = @Processing,");
+            sql.Append(", Processing = @Processing");
         }
 
         if (cofe.Varietal != null && cofe.Varietal.Length > 0)

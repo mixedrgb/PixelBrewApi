@@ -26,7 +26,7 @@ public class Program
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
-            //            .AllowAnyOrigin()
+            // .AllowAnyOrigin()
             );
 
         });

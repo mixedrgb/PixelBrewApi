@@ -3,7 +3,7 @@ namespace PixelBrewApi;
 public class Coffee
 {
     public int CoffeeId { get; set; }
-    public string CoffeeName { get; set; } = "FIX ME";
+    public string? CoffeeName { get; set; }
     public string? Region { get; set; }
     public string? Processing { get; set; }
     public string? Varietal { get; set; }

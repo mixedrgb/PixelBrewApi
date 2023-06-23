@@ -15,13 +15,14 @@ public class CoffeeController
     #region Insert Coffee
     [HttpPost]
     [Route("/InsertCoffee")]
-    public CoffeeResponse InsertCoffee(string coffeeName = "Barista's Choice",
-    string? region = "Vietnam",
-    string? processing = "Natural",
-    string? varietal = "Orange Bourbon",
-    string? roastType = "Medium-light",
-    string? weight = "340g",
-    string? roastDate = "1970/01/01")
+    public CoffeeResponse InsertCoffee(string coffeeName,
+    string? region,
+    string? roastDate,
+    string? roastType,
+    string? processing,
+    string? varietal,
+    string? weight
+    )
     {
 
         var sqlConn = new SqlConnectionString();
@@ -107,14 +108,14 @@ VALUES
             while (sqlDataReader.Read())
             {
                 Coffee cofe = new Coffee();
-                cofe.CoffeeName = sqlDataReader["CoffeeName"].ToString() ?? "";
                 cofe.CoffeeId = Convert.ToInt32(sqlDataReader["CoffeeId"]);
+                cofe.CoffeeName = sqlDataReader["CoffeeName"].ToString() ?? "";
                 cofe.Region = sqlDataReader["Region"].ToString();
+                cofe.RoastDate = sqlDataReader["RoastDate"].ToString();
+                cofe.RoastType = sqlDataReader["RoastType"].ToString();
                 cofe.Processing = sqlDataReader["Processing"].ToString();
                 cofe.Varietal = sqlDataReader["Varietal"].ToString();
-                cofe.RoastType = sqlDataReader["RoastType"].ToString();
                 cofe.Weight = sqlDataReader["Weight"].ToString();
-                cofe.RoastDate = sqlDataReader["RoastDate"].ToString();
                 listOfCoffee.Add(cofe);
             }
         }
@@ -124,65 +125,106 @@ VALUES
     #endregion
 
     #region Update Coffee
-    [HttpPatch]
+    [HttpPut]
     [Route("/UpdateCoffee")]
-    public int UpdateCoffee(int coffeeId,
-    string coffeeName,
-    string region = "",
-    string processing = "",
-    string varietal = "",
-    string roastType = "",
-    string weight = "",
-    string roastDate = "")
+    public CoffeeResponse UpdateCoffee(int coffeeId,
+    string? coffeeName,
+    string? region,
+    string? roastDate,
+    string? roastType,
+    string? processing,
+    string? varietal,
+    string? weight)
     {
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
+        var cofeResp = new CoffeeResponse();
 
         Coffee cofe = new Coffee();
         cofe.CoffeeName = coffeeName;
         cofe.Region = region;
+        cofe.RoastDate = roastDate;
+        cofe.RoastType = roastType;
         cofe.Processing = processing;
         cofe.Varietal = varietal;
-        cofe.RoastType = roastType;
         cofe.Weight = weight;
-        cofe.RoastDate = roastDate;
 
         string sql = CoffeeQuery.BuildQuery(cofe);
-
-        using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        try
         {
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(sql.ToString(), sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(sql.ToString(), sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
-            SqlParameter paramCoffeeName = new SqlParameter("@CoffeeName", coffeeName); // == null ? (object)DBNull.Value : employee.FirstName);
-            SqlParameter paramRegion = new SqlParameter("@Region", region); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramProcessing = new SqlParameter("@Processing", processing); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramVarietal = new SqlParameter("@Varietal", varietal); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramRoastType = new SqlParameter("@RoastType", roastType); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramWeight = new SqlParameter("@Weight", weight); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramRoastDate = new SqlParameter("@RoastDate", roastDate); // == null ? (object)DBNull.Value : employee.Salary);
+                SqlParameter paramCoffeeId = new SqlParameter("@CoffeeId", coffeeId); // == null ? (object)DBNull.Value : employee.FirstId);
+                sqlCommand.Parameters.Add(paramCoffeeId);
+                paramCoffeeId.DbType = DbType.Int32;
+                SqlParameter paramCoffeeName = new SqlParameter("", "");
+                SqlParameter paramRegion = new SqlParameter("", "");
+                SqlParameter paramProcessing = new SqlParameter("", "");
+                SqlParameter paramVarietal = new SqlParameter("", "");
+                SqlParameter paramRoastType = new SqlParameter("", "");
+                SqlParameter paramWeight = new SqlParameter("", "");
+                SqlParameter paramRoastDate = new SqlParameter("", "");
 
-            paramCoffeeId.DbType = DbType.Int32;
-            paramCoffeeName.DbType = DbType.String;
-            paramRegion.DbType = DbType.String;
-            paramProcessing.DbType = DbType.String;
-            paramVarietal.DbType = DbType.String;
-            paramRoastType.DbType = DbType.String;
-            paramWeight.DbType = DbType.String;
-            paramRoastDate.DbType = DbType.String;
+                if (coffeeName != null && coffeeName != "")
+                {
+                    paramCoffeeName = new SqlParameter("@CoffeeName", coffeeName); // == null ? (object)DBNull.Value : employee.FirstName);
+                    sqlCommand.Parameters.Add(paramCoffeeName);
+                    paramCoffeeName.DbType = DbType.String;
+                }
+                if (region != null && region != "")
+                {
+                    System.Console.WriteLine(region);
+                    paramRegion = new SqlParameter("@Region", region); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramRegion);
+                    paramRegion.DbType = DbType.String;
+                }
+                if (processing != null && processing != "")
+                {
+                    paramProcessing = new SqlParameter("@Processing", processing); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramProcessing);
+                    paramProcessing.DbType = DbType.String;
+                }
+                if (varietal != null && varietal != "")
+                {
+                    paramVarietal = new SqlParameter("@Varietal", varietal); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramVarietal);
+                    paramVarietal.DbType = DbType.String;
+                }
+                if (roastType != null && roastType != "")
+                {
+                    paramRoastType = new SqlParameter("@RoastType", roastType); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramRoastType);
+                    paramRoastType.DbType = DbType.String;
+                }
+                if (weight != null && weight != "")
+                {
+                    paramWeight = new SqlParameter("@Weight", weight); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramWeight);
+                    paramWeight.DbType = DbType.String;
+                }
+                if (roastDate != null && roastDate != "")
+                {
+                    paramRoastDate = new SqlParameter("@RoastDate", roastDate); // == null ? (object)DBNull.Value : employee.Salary);
+                    sqlCommand.Parameters.Add(paramRoastDate);
+                    paramRoastDate.DbType = DbType.String;
+                }
 
-            sqlCommand.Parameters.Add(paramCoffeeId);
-            sqlCommand.Parameters.Add(paramCoffeeName);
-            sqlCommand.Parameters.Add(paramRegion);
-            sqlCommand.Parameters.Add(paramProcessing);
-            sqlCommand.Parameters.Add(paramVarietal);
-            sqlCommand.Parameters.Add(paramRoastType);
-            sqlCommand.Parameters.Add(paramWeight);
-            sqlCommand.Parameters.Add(paramRoastDate);
-
-            return sqlCommand.ExecuteNonQuery();
+                sqlCommand.ExecuteNonQuery();
+                cofeResp.Message = "Coffee updated successfully";
+                cofeResp.Status = "Success";
+                cofeResp.Coffees = GetCoffee();
+                return cofeResp;
+            }
+        }
+        catch (Exception e)
+        {
+            cofeResp.Message = e.Message;
+            cofeResp.Status = "Failure";
+            return cofeResp;
         }
     }
     #endregion
