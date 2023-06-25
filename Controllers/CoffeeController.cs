@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
@@ -76,7 +75,6 @@ VALUES
             sqlCommand.Parameters.Add(paramWeight);
             sqlCommand.Parameters.Add(paramRoastDate);
 
-            // return a 200 OK status method
             sqlCommand.ExecuteNonQuery();
 
             CoffeeResponse response = new CoffeeResponse();
