@@ -104,7 +104,7 @@ VALUES
     #region Update Equipment
     [HttpPatch]
     [Route("/UpdateEquipment")]
-    public int UpdateEquipment(int grinderId,
+    public EquipmentResponse UpdateEquipment(int grinderId,
     string manufacturer,
     string model = "",
     string type = "",
@@ -120,7 +120,7 @@ VALUES
         equip.Type = type;
         equip.Setting = setting;
 
-        string sql = EquipmentQuery.BuildQuery(equip);
+        string sql = PBQuery.BuildGrinderQuery(equip);
 
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
@@ -128,11 +128,11 @@ VALUES
             SqlCommand sqlCommand = new SqlCommand(sql.ToString(), sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramGrinderId = new SqlParameter("@EquipmentId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
-            SqlParameter paramGrinderName = new SqlParameter("@EquipmentName", manufacturer); // == null ? (object)DBNull.Value : employee.FirstName);
-            SqlParameter paramModel = new SqlParameter("@Region", model); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramType = new SqlParameter("@Processing", type); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramSetting = new SqlParameter("@Varietal", setting); // == null ? (object)DBNull.Value : employee.Salary);
+            SqlParameter paramGrinderId = new SqlParameter("@GrinderId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
+            SqlParameter paramGrinderName = new SqlParameter("@GrinderManufacturer", manufacturer); // == null ? (object)DBNull.Value : employee.FirstName);
+            SqlParameter paramModel = new SqlParameter("@GrinderModel", model); // == null ? (object)DBNull.Value : employee.Salary);
+            SqlParameter paramType = new SqlParameter("@GrinderType", type); // == null ? (object)DBNull.Value : employee.Salary);
+            SqlParameter paramSetting = new SqlParameter("@GrinderSetting", setting); // == null ? (object)DBNull.Value : employee.Salary);
 
             paramGrinderId.DbType = DbType.Int32;
             paramGrinderName.DbType = DbType.String;
@@ -146,7 +146,12 @@ VALUES
             sqlCommand.Parameters.Add(paramType);
             sqlCommand.Parameters.Add(paramSetting);
 
-            return sqlCommand.ExecuteNonQuery();
+            sqlCommand.ExecuteNonQuery();
+            var equipResponse = new EquipmentResponse();
+            equipResponse.Message = "Equipment updated successfully";
+            equipResponse.Status = "Success";
+            equipResponse.Equipments = GetEquipment();
+            return equipResponse;
         }
     }
     #endregion

@@ -147,7 +147,7 @@ VALUES
         cofe.Varietal = varietal;
         cofe.Weight = weight;
 
-        string sql = CoffeeQuery.BuildQuery(cofe);
+        string sql = PBQuery.BuildCoffeeQuery(cofe);
         try
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
