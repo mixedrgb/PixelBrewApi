@@ -14,22 +14,19 @@ public class EquipmentController
     #region Insert Equipment
     [HttpPost]
     [Route("/InsertEquipment")]
-    public EquipmentResponse InsertEquipment(string coffeeName = "Barista's Choice",
-    string? region = "Vietnam",
-    string? processing = "Natural",
-    string? varietal = "Orange Bourbon",
-    string? roastType = "Medium-light",
-    string? weight = "340g",
-    string? roastDate = "1970/01/01")
+    public EquipmentResponse InsertEquipment(string grinderManufacturer,
+    string? grinderModel,
+    string? grinderType,
+    string? grinderSetting)
     {
 
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
         var sql = @$"INSERT INTO Equipment
-(EquipmentName, Region, Processing, Varietal, RoastType, Weight, RoastDate)
+(GrinderManufacturer, GrinderModel, GrinderType, GrinderSetting)
 VALUES
-(@EquipmentName, @Region, @Processing, @Varietal, @RoastType, @Weight, @RoastDate)
+(@GrinderManufacturer, @GrinderModel, @GrinderType, @GrinderSetting)
 ;";
         using (SqlConnection sqlConnection = new SqlConnection(connectionString))
         {
@@ -37,42 +34,27 @@ VALUES
             SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramEquipmentName = new SqlParameter("EquipmentName",
-                    coffeeName == null ? (object)DBNull.Value : coffeeName);
+            SqlParameter paramGrinderManfacturer = new SqlParameter("GrinderManufacturer",
+                    grinderManufacturer == null ? (object)DBNull.Value : grinderManufacturer);
 
-            SqlParameter paramRegion = new SqlParameter("@Region",
-                    region == null ? (object)DBNull.Value : region);
+            SqlParameter paramGrinderModel = new SqlParameter("@GrinderModel",
+                    grinderModel == null ? (object)DBNull.Value : grinderModel);
 
-            SqlParameter paramProcessing = new SqlParameter("@Processing",
-                    processing == null ? (object)DBNull.Value : processing);
+            SqlParameter paramGrinderType = new SqlParameter("@GrinderType",
+                    grinderType == null ? (object)DBNull.Value : grinderType);
 
-            SqlParameter paramVarietal = new SqlParameter("@Varietal",
-                    varietal == null ? (object)DBNull.Value : varietal);
+            SqlParameter paramGrinderSetting = new SqlParameter("@GrinderSetting",
+                    grinderSetting == null ? (object)DBNull.Value : grinderSetting);
 
-            SqlParameter paramRoastType = new SqlParameter("@RoastType",
-                    roastType == null ? (object)DBNull.Value : roastType);
+            paramGrinderManfacturer.DbType = DbType.String;
+            paramGrinderModel.DbType = DbType.String;
+            paramGrinderType.DbType = DbType.String;
+            paramGrinderSetting.DbType = DbType.String;
 
-            SqlParameter paramWeight = new SqlParameter("@Weight",
-                    weight == null ? (object)DBNull.Value : weight);
-
-            SqlParameter paramRoastDate = new SqlParameter("@RoastDate",
-                    roastDate == null ? (object)DBNull.Value : roastDate);
-
-            paramEquipmentName.DbType = DbType.String;
-            paramRegion.DbType = DbType.String;
-            paramProcessing.DbType = DbType.String;
-            paramVarietal.DbType = DbType.String;
-            paramRoastType.DbType = DbType.String;
-            paramWeight.DbType = DbType.String;
-            paramRoastDate.DbType = DbType.String;
-
-            sqlCommand.Parameters.Add(paramEquipmentName);
-            sqlCommand.Parameters.Add(paramRegion);
-            sqlCommand.Parameters.Add(paramProcessing);
-            sqlCommand.Parameters.Add(paramVarietal);
-            sqlCommand.Parameters.Add(paramRoastType);
-            sqlCommand.Parameters.Add(paramWeight);
-            sqlCommand.Parameters.Add(paramRoastDate);
+            sqlCommand.Parameters.Add(paramGrinderManfacturer);
+            sqlCommand.Parameters.Add(paramGrinderModel);
+            sqlCommand.Parameters.Add(paramGrinderType);
+            sqlCommand.Parameters.Add(paramGrinderSetting);
 
             // return a 200 OK status method
             sqlCommand.ExecuteNonQuery();
@@ -177,7 +159,7 @@ VALUES
         var sqlConn = new SqlConnectionString();
         string connectionString = sqlConn.GetConnectionString();
 
-        var sql = @$"DELETE FROM Equipment WHERE EquipmentId = @EquipmentId;";
+        var sql = @$"DELETE FROM Equipment WHERE GrinderId = @GrinderId;";
         Equipment cofe = new Equipment();
         var equipResponse = new EquipmentResponse();
         try
@@ -189,7 +171,7 @@ VALUES
                 SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                 sqlCommand.CommandType = CommandType.Text;
 
-                SqlParameter paramEquipmentId = new SqlParameter("@EquipmentId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
+                SqlParameter paramEquipmentId = new SqlParameter("@GrinderId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
 
                 paramEquipmentId.DbType = DbType.Int32;
 
