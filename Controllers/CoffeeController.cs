@@ -175,7 +175,6 @@ VALUES
                 }
                 if (region != null && region != "")
                 {
-                    System.Console.WriteLine(region);
                     paramRegion = new SqlParameter("@Region", region); // == null ? (object)DBNull.Value : employee.Salary);
                     sqlCommand.Parameters.Add(paramRegion);
                     paramRegion.DbType = DbType.String;
