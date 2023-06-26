@@ -2,9 +2,38 @@ using System.Text;
 
 namespace PixelBrewApi;
 
-public static class CoffeeQuery
+public static class PBQuery
 {
-    public static string BuildQuery(Coffee cofe)
+    public static string BuildGrinderQuery(Equipment equip)
+    {
+        StringBuilder sql = new StringBuilder();
+        sql.Append("UPDATE Equipment SET");
+        if (equip.Manufacturer != null && equip.Manufacturer.Length > 0)
+        {
+            sql.Append(" GrinderManufacturer = @GrinderManufacturer");
+        }
+
+        if (equip.Type != null && equip.Type.Length > 0)
+        {
+            sql.Append(", GrinderType = @GrinderType");
+        }
+
+        if (equip.Model != null && equip.Model.Length > 0)
+        {
+            sql.Append(", GrinderModel = @GrinderModel");
+        }
+
+        if (equip.Setting != null && equip.Setting.Length > 0)
+        {
+            sql.Append(", GrinderSetting = @GrinderSetting");
+        }
+
+        sql.Append(" WHERE GrinderId = @GrinderId");
+
+        return sql.ToString();
+    }
+
+    public static string BuildCoffeeQuery(Coffee cofe)
     {
         StringBuilder sql = new StringBuilder();
         sql.Append("UPDATE Coffee SET");
