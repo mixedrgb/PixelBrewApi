@@ -17,6 +17,8 @@ INSERT INTO Notes (
 )
 VALUES (
     'Frappe',
-    'Here is where I"'"d put a trophy... IF I HAD ONE!!'
+    'Here is where I'\'''d put a trophy... IF I HAD ONE!!'
 )
 ;
+
+-- TODO: escape the apostrophe
