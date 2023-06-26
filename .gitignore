@@ -5,6 +5,9 @@
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+# for docker
+published/
+
 # Local History for Visual Studio Code
 .history/
 
