@@ -102,7 +102,7 @@ VALUES
     #endregion
 
     #region Update Equipment
-    [HttpPatch]
+    [HttpPut]
     [Route("/UpdateEquipment")]
     public EquipmentResponse UpdateEquipment(int grinderId,
     string manufacturer,
