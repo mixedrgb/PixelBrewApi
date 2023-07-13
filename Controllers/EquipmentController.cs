@@ -128,11 +128,11 @@ VALUES
             SqlCommand sqlCommand = new SqlCommand(sql.ToString(), sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
 
-            SqlParameter paramGrinderId = new SqlParameter("@GrinderId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
-            SqlParameter paramGrinderName = new SqlParameter("@GrinderManufacturer", manufacturer); // == null ? (object)DBNull.Value : employee.FirstName);
-            SqlParameter paramModel = new SqlParameter("@GrinderModel", model); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramType = new SqlParameter("@GrinderType", type); // == null ? (object)DBNull.Value : employee.Salary);
-            SqlParameter paramSetting = new SqlParameter("@GrinderSetting", setting); // == null ? (object)DBNull.Value : employee.Salary);
+            SqlParameter paramGrinderId = new SqlParameter("@GrinderId", grinderId);
+            SqlParameter paramGrinderName = new SqlParameter("@GrinderManufacturer", manufacturer);
+            SqlParameter paramModel = new SqlParameter("@GrinderModel", model);
+            SqlParameter paramType = new SqlParameter("@GrinderType", type);
+            SqlParameter paramSetting = new SqlParameter("@GrinderSetting", setting);
 
             paramGrinderId.DbType = DbType.Int32;
             paramGrinderName.DbType = DbType.String;
@@ -176,7 +176,7 @@ VALUES
                 SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                 sqlCommand.CommandType = CommandType.Text;
 
-                SqlParameter paramEquipmentId = new SqlParameter("@GrinderId", grinderId); // == null ? (object)DBNull.Value : employee.FirstId);
+                SqlParameter paramEquipmentId = new SqlParameter("@GrinderId", grinderId);
 
                 paramEquipmentId.DbType = DbType.Int32;
 
